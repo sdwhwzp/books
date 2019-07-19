@@ -4,7 +4,7 @@ function _connect(cb) {
     mongoClient.connect("mongodb://127.0.0.1:27017",{ useNewUrlParser: true },function (err,client) {
         if(err) console.log("连接失败");
         else{
-            const db = client.db("ele1908");
+            const db = client.db("books");
             cb(db);
         }
     })
