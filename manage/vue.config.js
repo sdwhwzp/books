@@ -5,7 +5,7 @@ module.exports={
         host:"127.0.0.1",
         proxy:{
             "/book":{
-                target:"http:127.0.0.1",
+                target:"http://127.0.0.1",
                 changeOrigin: true,
                 pathRewrite:{
                     "^/book":""
