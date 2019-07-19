@@ -4,14 +4,15 @@ const state={
 }
 const mutations={
     CHANGE_TOKEN(state,token){
-        state.token=localStorage.token
+        state.token=localStorage.token=token
     }
 }
 const actions={
     login({commit},vm){
-        console.log(vm.ruleFrom)
-        axios.get("/book/login",vm.ruleFrom).then(({data})=>{
+        axios.post("/book/login",vm.ruleFrom)
+            .then(({data})=>{
             console.log(data)
+                commit("CHANGE_TOKEN",data.token)
         })
     }
 }
