@@ -42,9 +42,9 @@
             submitForm(){
                 this.$refs.adminForm.validate((isVali)=>{
 
-                    console.log(isVali)
+
                     if (isVali) {
-                        console.log(this)
+
                         this.$store.dispatch("login",this)
                     }
 

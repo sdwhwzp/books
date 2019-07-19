@@ -8,11 +8,15 @@ const mutations={
     }
 }
 const actions={
-    getLogin({commit},vm){
-        axios.post("/book/")
+    login({commit},vm){
+        console.log(vm.ruleFrom)
+        axios.get("/book/login",vm.ruleFrom).then(({data})=>{
+            console.log(data)
+        })
     }
 }
 export default {
     state,
-    mutations
+    mutations,
+    actions
 }
