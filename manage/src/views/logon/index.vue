@@ -38,9 +38,16 @@
         name: "logon",
         data(){
             var valiadminName = (rule, value, callback) => {
+
                 this.$store.commit("CHANGE_SHOW",false)
                 this.$store.commit("CHANGE_NOSHOW",false)
-                this.$store.dispatch("change",value)
+
+                this.$store.dispatch("change",this)
+
+
+
+
+
                 callback();
             };
             var validatePass = (rule, value, callback) => {
@@ -134,6 +141,10 @@
 
             },
 
+        },
+        mounted() {
+            this.$store.commit("CHANGE_SHOW",false)
+            this.$store.commit("CHANGE_NOSHOW",false)
         }
     }
 </script>

@@ -127,7 +127,7 @@ app.post("/logon",function (req,res) {//post方式接收
                                         password:help.md5(passWord),
                                         phoneId,
                                         lastTime:Date.now(),
-
+                                        level:help.md5("lv1")
                                     },function (err, results) {
 
                                         res.json({

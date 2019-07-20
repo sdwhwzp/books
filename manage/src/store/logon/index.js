@@ -21,37 +21,65 @@ const actions={
             }
         }).then(({data})=>{
             if (data.ok===-2){
-                alert(data.msg)
+                vm.$message({
+                    message: data.msg,
+                    type: "warning"
+                })
+
+            }
+            if (data.ok === 1) {
+                vm.$message({
+                    message: data.msg,
+                    type: "success"
+                })
             }
 
         })
     },
     logon({},vm){
-        console.log(11111111)
+
         axiox.post("/book/logon",vm.ruleForm).then(({data})=>{
             if (data.ok===-2){
-                alert(data.msg)
+                vm.$message({
+                    message: data.msg,
+                    type: "warning"
+                })
             }
-            console.log(data.msg)
+            if (data.ok === 1) {
+                vm.$message({
+                    message: data.msg,
+                    type: "success"
+                }).then(vm.$router.push('/'))
+            }
         })
     },
-    change({commit},userName){
+    change({commit},vm){
 
         axiox.get("/book/userName",{
             params:{
-                userName
+                userName:vm.ruleForm.adminName
             }
         }).then(({data})=>{
             if (data.ok===-2){
                 commit("CHANGE_NOSHOW",true)
-                alert(data.msg)
+                vm.$message({
+                    message: data.msg,
+                    type: "warning"
+                })
+
+            }
+            if (data.ok===1){
+
+                commit("CHANGE_SHOW",true)
+                vm.$message({
+                    message: data.msg,
+                    type: "success"
+                })
+
             }
 
-            if (data.ok===1){
-                commit("CHANGE_SHOW",true)
-                alert(data.msg)
-            }
         })
+
     }
 }
 
