@@ -28,6 +28,7 @@
                     passWord:''
                 },
                 isloading:false,
+                show:false,
                 rules:{
                     adminName:[
                         { required: true, message: '请输入您的账号', trigger: 'blur' },
@@ -58,13 +59,35 @@
 </script>
 
 <style scoped lang="less">
-    .container{
-        width: 350px;
-        margin: 250px auto;
-        border: 1px solid #eaeaea;
-        padding: 10px 30px;
-        h3{
-            text-align: center;
+    @media screen and (min-width: 1120px) {
+        .container{
+            width: 350px;
+            margin:  auto;
+            border: 1px solid #eaeaea;
+            padding: 10px 30px;
+            h3{
+                text-align: center;
+            }
+        }
+    }
+    @media screen and (min-width: 769px) and (max-width: 1119px){
+        .container{
+            width: 350px;
+            margin:150px  auto;
+            border: 1px solid #eaeaea;
+            padding: 10px 30px;
+            h3{
+                text-align: center;
+            }
+        }
+    }
+    @media screen and (max-width:768px){
+        .container{
+            width: 100%;
+            margin-top: 20% ;
+            h3{
+                text-align: center;
+            }
         }
     }
 </style>

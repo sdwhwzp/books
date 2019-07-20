@@ -25,7 +25,7 @@
                 <el-input placeholder="请输入验证码" type="input" v-model="ruleForm.code" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" style="width: 48%;margin-left: 1%;" :loading="$store.state.isloading" @click="$router.push('/')">返回登录</el-button>
+                <el-button type="primary" style="width: 48%;margin-left: 1%;" :loading="$store.state.isloading" @click="$router.push('/login')">返回登录</el-button>
                 <el-button type="primary" style="width: 48%" :loading="$store.state.isloading" @click="logon">注册</el-button>
             </el-form-item>
 
@@ -146,6 +146,7 @@
 </script>
 
 <style scoped lang="less">
+    @media screen and (min-width: 1120px) {
     .container{
         width: 350px;
         margin:  auto;
@@ -154,5 +155,28 @@
     h3{
         text-align: center;
     }
+    }
+    }
+    @media screen and (min-width: 769px) and (max-width: 1119px){
+        .container{
+            width: 350px;
+            margin:  auto;
+            border: 1px solid #eaeaea;
+            padding: 10px 30px;
+            h3{
+                text-align: center;
+            }
+        }
+    }
+    @media screen and (max-width:768px){
+        .container{
+            width: 100%;
+
+
+
+            h3{
+                text-align: center;
+            }
+        }
     }
 </style>

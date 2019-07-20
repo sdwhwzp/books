@@ -14,10 +14,24 @@ const mutations={
 }
 const actions={
     login({commit},vm){
-        axios.post("/book/login",vm.ruleFrom)
-            .then(({data})=>{
+        axios.post("/login",vm.ruleFrom)
+            .then(data=>{
             console.log(data)
-                commit("CHANGE_TOKEN",data.token)
+                if (data.ok === 1) {
+                    commit("CHANGE_TOKEN",data.token)
+                    vm.$router.push('/')
+                    vm.$message({
+                        message: data.msg,
+                        type: "success"
+                    })
+                }
+                else {
+                    vm.$message({
+                        message: data.msg,
+                        type: "warning"
+                    })
+                }
+
         })
     }
 }

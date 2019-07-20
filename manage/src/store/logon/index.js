@@ -14,11 +14,11 @@ const mutations={
 const actions={
     sendCode({},vm) {
 
-        axiox.get("/book/phoneId",{
+        axiox.get("/phoneId",{
             params:{
                 phoneId:vm.ruleForm.phoneId
             }
-        }).then(({data})=>{
+        }).then(data=>{
             if (data.ok===-2){
                 vm.$message({
                     message: data.msg,
@@ -34,7 +34,7 @@ const actions={
         })
     },
     logon({},vm){
-        axiox.post("/book/logon",vm.ruleForm).then(({data})=>{
+        axiox.post("/logon",vm.ruleForm).then(data=>{
             if (data.ok===-2){
                 vm.$message({
                     message: data.msg,
@@ -51,17 +51,17 @@ const actions={
                 vm.$message({
                     message: data.msg,
                     type: "success"
-                }).then(vm.$router.push('/'))
+                }).then(vm.$router.push('/login'))
             }
         })
     },
     change({commit},vm){
 
-        axiox.get("/book/userName",{
+        axiox.get("/userName",{
             params:{
                 userName:vm.ruleForm.adminName
             }
-        }).then(({data})=>{
+        }).then(data=>{
             if (data.ok===-2){
                 commit("CHANGE_NOSHOW",true)
                 vm.$message({

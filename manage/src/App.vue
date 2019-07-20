@@ -1,26 +1,58 @@
 <template>
   <div id="app">
-    <el-button @click="$store.commit('LOGOUT')" type="danger">退出</el-button>
+    <el-container>
+      <el-header style="height: 20%;background: #F56C6C" >
+        <h1 >图书管理下载中心</h1>
+        <el-button @click="$store.commit('LOGOUT')" type="primary">退出</el-button></el-header>
+      <el-main>Main<router-view v-if="show"></router-view></el-main>
+      <el-footer>Footer</el-footer>
+    </el-container>
+
 
   </div>
 </template>
+<script>
+  export default {
+    name: "app",
+    data(){
+      return{
+        show:true
+      }
+    },
+    mounted() {
+      const str=window.location.href
+      if (str.indexOf("login") || str.indexOf("logon")>0) {
+        this.show=false
+      }
 
-<style lang="less">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-    &.router-link-exact-active {
-      color: #42b983;
     }
+
   }
+</script>
+<style lang="less">
+  *{
+    margin: 0;
+    padding: 0;
+  }
+body,html{
+  height: 100%;
 }
+.el-header, .el-footer {
+
+  background-color: #B3C0D1;
+  color: #333;
+  text-align: center;
+  line-height: 50px;
+  height: 500px;
+}
+
+
+
+.el-main {
+  background-color: #E9EEF3;
+  color: #333;
+  text-align: center;
+  line-height: 160px;
+}
+
 </style>

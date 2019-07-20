@@ -20,6 +20,7 @@ app.post("/login",function (req, res) {
 
             res.json({
                 token:jwt.encode(adminName,adminInfo),
+                code:help.md5(adminInfo.level),
                 ok:1,
                 msg:"登录成功"
             })
@@ -51,7 +52,7 @@ app.get("/phoneId",function (req, res) {//发送验证码 get方式
     const phoneId=req.query.phoneId
 
     db.findOne("userList",{phoneId:phoneId/1},function (err, userInfo) {
-        console.log(userInfo)
+
         if (userInfo) {
             res.json({
                 ok:-2,
