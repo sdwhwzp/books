@@ -103,7 +103,9 @@
                     ],
                     phoneId:[
                         { required: true, message: '请输入您的手机号', trigger: 'blur' },
-                        { min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur' }
+                        { min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur' },
+                        {type:'number', message: '手机号码必须为数字', trigger: 'change' }
+
                     ]
                 }
             }
