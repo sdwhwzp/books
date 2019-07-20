@@ -1,10 +1,7 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
+    <el-button @click="$store.commit('LOGOUT')" type="danger">退出</el-button>
+
   </div>
 </template>
 

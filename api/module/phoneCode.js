@@ -11,7 +11,7 @@ const hp=require("./hp")
 module.exports=function (phoneId,cb) {
     const code=hp.getRandom(100000,999999)
     const mobile=phoneId
-    const tpl_id="169429"
+    const tpl_id="174079"
     const tpl_value="#code#="+code
     const key="6b5cc862d76d7acfe887caeea8dc30fc"
     console.log(tpl_value)
