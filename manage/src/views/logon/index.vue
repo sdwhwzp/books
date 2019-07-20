@@ -3,13 +3,17 @@
         <el-form class="container" :model="ruleForm" :rules="rules" ref="ruleForm">
             <h3>注册</h3>
             <el-form-item prop="adminName">
-                <el-input v-model="ruleForm.adminName" placeholder="请输入账号">
+                <el-input style="width: 90%"  ref="adminName" v-model="ruleForm.adminName" placeholder="请输入账号" >
 
                 </el-input>
+
+                <i v-if="this.$store.state.logon.show" style="color: aqua;font-size: 20px;margin-left: 4%" class="el-icon-success"></i>
+                <i v-if="this.$store.state.logon.noshow" style="color: #F56C6C;font-size: 20px;margin-left: 4%" class="el-icon-error"></i>
+
             </el-form-item>
             <el-form-item prop="phoneId" ref="phoneId">
                 <el-input style="width: 70%" v-model="ruleForm.phoneId" placeholder="请输入手机号"></el-input>
-                <el-button size="mini" style="width: 25%;margin-left: 4%" type="primary" @click="getCode">获取验证码</el-button>
+                <el-button :loading="loading" size="mini" style="width: 25%;margin-left: 4%" type="primary" @click="getCode">获取验证码</el-button>
             </el-form-item>
             <el-form-item prop="passWord">
                 <el-input placeholder="请输入密码" type="passWord" v-model="ruleForm.passWord" autocomplete="off"></el-input>
@@ -33,6 +37,12 @@
     export default {
         name: "logon",
         data(){
+            var valiadminName = (rule, value, callback) => {
+                this.$store.commit("CHANGE_SHOW",false)
+                this.$store.commit("CHANGE_NOSHOW",false)
+                this.$store.dispatch("change",value)
+                callback();
+            };
             var validatePass = (rule, value, callback) => {
                 if (value === '') {
                     callback(new Error('请输入密码'));
@@ -61,11 +71,14 @@
                     code:""
 
                 },
+                loading:false,
                 isloading:false,
+
                 rules:{
                     adminName:[
                         { required: true, message: '请输入您的账号', trigger: 'blur' },
-                        { min: 3, max: 100, message: '长度最少为3字符', trigger: 'blur' }
+                        { min: 3, max: 100, message: '长度最少为3字符', trigger: 'blur' },
+                        {validator: valiadminName,trigger: 'blur'}
                     ],
                     passWord:[
                         { required: true, message: '请输入您的密码', trigger: 'blur' },
@@ -92,13 +105,26 @@
             getCode(){
 
                 if (this.$refs.phoneId.validateState==="success") {
+                    this.loading=true
+                    let _me =this
+                    let index=60
+                    let timer=setInterval(function () {
+                        --index
+                        if (index < 1) {
+                            clearInterval(_me.timer)
+                            _me.loading=false
+                        }
+                    },1000)
                     this.$store.dispatch("sendCode",this)
                 }
 
             },
             logon(){
+
                 this.$refs.ruleForm.validate((isVali)=>{
+
                     if (isVali) {
+
                         this.$store.dispatch("logon",this)
                     }
 
@@ -106,7 +132,8 @@
                 })
 
 
-            }
+            },
+
         }
     }
 </script>
