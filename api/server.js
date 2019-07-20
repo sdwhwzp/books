@@ -16,17 +16,42 @@ app.post("/login",function (req, res) {
             userName:adminName,
             password:help.md5(passWord)
     },function (err, adminInfo) {
-              res.json({
-            token:jwt.encode(adminName),
-            ok:1,
-            msg:"登录成功"
-        })
+        if (adminInfo) {
+
+            res.json({
+                token:jwt.encode(adminName,adminInfo),
+                ok:1,
+                msg:"登录成功"
+            })
+        }else {
+            db.findOne("userList",{
+                userName:adminName,
+                password:help.md5(passWord)
+            },function (err, userInfo) {
+               if (userInfo) {
+                   console.log(userInfo)
+                   console.log(userInfo.level)
+                   res.json({
+                       token:jwt.encode(adminName,userInfo.level),
+                       code:help.md5(userInfo.level),
+                       ok:1,
+                       msg:"登录成功"
+                   })
+               }else {
+                   help.json(res,-2,"密码错误")
+               }
+
+            })
+
+        }
     })
 
 })
 app.get("/phoneId",function (req, res) {//发送验证码 get方式
     const phoneId=req.query.phoneId
-    db.findOne("userList",{phoneId},function (err, userInfo) {
+
+    db.findOne("userList",{phoneId:phoneId/1},function (err, userInfo) {
+        console.log(userInfo)
         if (userInfo) {
             res.json({
                 ok:-2,
@@ -83,6 +108,7 @@ app.get("/phoneId",function (req, res) {//发送验证码 get方式
 })
 app.post("/logon",function (req,res) {//post方式接收
     const {adminName,passWord,phoneId,code}=req.body
+
     /**
      * 1.连接数据库codeList，从中查询到phoneId保存的code
      * 2.将得到的code与数据库中code做对比，如果相同则进行下一步
@@ -96,8 +122,9 @@ app.post("/logon",function (req,res) {//post方式接收
             })
         }else{
             db.findOne("codeList",{
-                phoneId
+                phoneId:phoneId+""
             },function (err, codeInfo) {
+
                 if (codeInfo) {//有验证码
                     if (codeInfo.code === (code / 1)) {//验证码存在
                         if ((Date.now() - codeInfo.sendTime) < 10*60 * 1000) {//发送验证码没有超过10分钟

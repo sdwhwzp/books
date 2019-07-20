@@ -1,6 +1,5 @@
 import axiox from 'axios'
 const state={
-
     show:false,
     noshow:false
 }
@@ -25,7 +24,6 @@ const actions={
                     message: data.msg,
                     type: "warning"
                 })
-
             }
             if (data.ok === 1) {
                 vm.$message({
@@ -33,13 +31,17 @@ const actions={
                     type: "success"
                 })
             }
-
         })
     },
     logon({},vm){
-
         axiox.post("/book/logon",vm.ruleForm).then(({data})=>{
             if (data.ok===-2){
+                vm.$message({
+                    message: data.msg,
+                    type: "warning"
+                })
+            }
+            if (data.ok===-1){
                 vm.$message({
                     message: data.msg,
                     type: "warning"
@@ -82,7 +84,6 @@ const actions={
 
     }
 }
-
 export default {
     actions,
     state,

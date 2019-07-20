@@ -12,7 +12,7 @@
 
             </el-form-item>
             <el-form-item prop="phoneId" ref="phoneId">
-                <el-input style="width: 70%" v-model="ruleForm.phoneId" placeholder="请输入手机号"></el-input>
+                <el-input  style="width: 70%" v-model.number="ruleForm.phoneId" placeholder="请输入手机号"></el-input>
                 <el-button :loading="loading" size="mini" style="width: 25%;margin-left: 4%" type="primary" @click="getCode">获取验证码</el-button>
             </el-form-item>
             <el-form-item prop="passWord">
@@ -38,16 +38,9 @@
         name: "logon",
         data(){
             var valiadminName = (rule, value, callback) => {
-
                 this.$store.commit("CHANGE_SHOW",false)
                 this.$store.commit("CHANGE_NOSHOW",false)
-
                 this.$store.dispatch("change",this)
-
-
-
-
-
                 callback();
             };
             var validatePass = (rule, value, callback) => {
@@ -103,8 +96,9 @@
                     ],
                     phoneId:[
                         { required: true, message: '请输入您的手机号', trigger: 'blur' },
-                        { min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur' },
-                        {type:'number', message: '手机号码必须为数字', trigger: 'change' }
+                        {type:'number',min:10000000000,max:99999999999, message: '手机号码必须为数字', trigger:'blur' },
+
+
 
                     ]
                 }
