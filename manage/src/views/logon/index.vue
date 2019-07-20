@@ -7,9 +7,9 @@
 
                 </el-input>
             </el-form-item>
-            <el-form-item prop="phoneId">
+            <el-form-item prop="phoneId" ref="phoneId">
                 <el-input style="width: 70%" v-model="ruleForm.phoneId" placeholder="请输入手机号"></el-input>
-                <el-button size="mini" style="width: 25%;margin-left: 4%" type="primary">获取验证码</el-button>
+                <el-button size="mini" style="width: 25%;margin-left: 4%" type="primary" @click="getCode">获取验证码</el-button>
             </el-form-item>
             <el-form-item prop="passWord">
                 <el-input placeholder="请输入密码" type="passWord" v-model="ruleForm.passWord" autocomplete="off"></el-input>
@@ -21,8 +21,8 @@
                 <el-input placeholder="请输入验证码" type="input" v-model="ruleForm.code" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" style="width: 48%;margin-left: 1%;" :loading="$store.state.isloading" >返回登录</el-button>
-                <el-button type="primary" style="width: 48%" :loading="$store.state.isloading" >注册</el-button>
+                <el-button type="primary" style="width: 48%;margin-left: 1%;" :loading="$store.state.isloading" @click="$router.push('/')">返回登录</el-button>
+                <el-button type="primary" style="width: 48%" :loading="$store.state.isloading" @click="logon">注册</el-button>
             </el-form-item>
 
         </el-form>
@@ -80,10 +80,34 @@
                     code:[
                         { required: true, message: '请输入您的验证码', trigger: 'blur' },
                         { min: 6, max: 6, message: '请输入6位数字', trigger: 'blur' },
+                    ],
+                    phoneId:[
+                        { required: true, message: '请输入您的手机号', trigger: 'blur' },
+                        { min: 11, max: 11, message: '请输入正确的手机号', trigger: 'blur' }
                     ]
                 }
             }
         },
+        methods:{
+            getCode(){
+
+                if (this.$refs.phoneId.validateState==="success") {
+                    this.$store.dispatch("sendCode",this)
+                }
+
+            },
+            logon(){
+                this.$refs.ruleForm.validate((isVali)=>{
+                    if (isVali) {
+                        this.$store.dispatch("logon",this)
+                    }
+
+
+                })
+
+
+            }
+        }
     }
 </script>
 
