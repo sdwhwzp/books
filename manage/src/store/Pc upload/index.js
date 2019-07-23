@@ -1,6 +1,11 @@
 import axios from 'axios'
 const state={
-
+    tableData:[]
+}
+const  mutations={
+    CHANGE_DATA(state,tableDate){
+        state.tableData=tableDate
+    }
 }
 const actions={
     upLoad({},vm){
@@ -11,6 +16,16 @@ const actions={
        }).then(data=>{
            console.log(data)
        })
+    },
+    getbookList({state,commit},pageIndex=1){
+        axios.get('/bookslist',{
+            params:{
+                token:localStorage.token,
+                pageIndex
+            }
+        }).then(data=>{
+            console.log(data)
+        })
     }
 }
 export default {

@@ -5,8 +5,8 @@
                 <h1>图书管理下载中心</h1>
                 <el-button @click="$store.commit('LOGOUT')" type="primary">退出</el-button>
             </el-header>
-            <el-main>
-                <el-button ref="book" type="text" @click="dialogFormVisible = true">上传图书</el-button>
+            <el-main id="upload" style="height:5%;">
+                <el-button ref="book" type="text" style="font-size: 30px" @click="dialogFormVisible = true">上传图书</el-button>
                 <el-dialog title="只允许上传一本图书" :visible.sync="dialogFormVisible">
                     <el-form :model="form">
                         <el-form-item label="图书类型">
@@ -31,7 +31,9 @@
                     </div>
                 </el-dialog>
             </el-main>
-            <el-main>Main
+            <el-main>
+                <h3>图书列表</h3>
+                <router-link to="/userlist">请点击我</router-link>
                 <router-view v-if="show"></router-view>
             </el-main>
             <el-footer>Footer</el-footer>
@@ -45,7 +47,7 @@
     name: "app",
     data() {
       return {
-        show: true,
+        show:true,
           token:localStorage.token,
           dialogFormVisible:false,
           form:{
@@ -69,9 +71,14 @@
     },
     mounted() {
       const str = window.location.href
+        console.log(str)
       const me = this
-      if (str.indexOf("login") || str.indexOf("logon") > 0) {
+
+      if (str.indexOf("login")>0 || str.indexOf("logon") > 0) {
+
         this.show = false
+      }else {
+          this.show=true
       }
       setInterval(function () {
         me.$store.dispatch("again", me)
@@ -90,6 +97,7 @@
 
 </script>
 <style lang="less">
+
   *{
     margin: 0;
     padding: 0;
@@ -97,22 +105,63 @@
 body,html{
   height: 100%;
 }
-.el-header, .el-footer {
+  @media screen and (min-width: 1120px) {
+      .el-header, .el-footer {
+          background-color: #B3C0D1;
+          color: #333;
+          text-align: center;
+          line-height: 50px;
+          height: 500px;
+      }
 
-  background-color: #B3C0D1;
-  color: #333;
-  text-align: center;
-  line-height: 50px;
-  height: 500px;
-}
+
+
+      .el-main {
+          background-color: #E9EEF3;
+          color: #333;
+          text-align: center;
+          line-height: 160px;
+      }
+
+  }
+  @media screen and (min-width: 769px) and (max-width: 1119px){
+      .el-header, .el-footer {
+
+          background-color: #B3C0D1;
+          color: #333;
+          text-align: center;
+          line-height: 50px;
+          height: 500px;
+      }
 
 
 
-.el-main {
-  background-color: #E9EEF3;
-  color: #333;
-  text-align: center;
-  line-height: 160px;
-}
+      .el-main {
+          background-color: #E9EEF3;
+          color: #333;
+          text-align: center;
+          line-height: 160px;
+      }
+
+  }
+  @media screen and (max-width:768px){
+      .el-header, .el-footer {
+
+          background-color: #B3C0D1;
+          color: #333;
+          text-align: center;
+          line-height: 50px;
+          height: 500px;
+      }
+      .el-main {
+          background-color: #E9EEF3;
+          color: #333;
+          text-align: center;
+          line-height: 160px;
+      }
+      #upload{
+          display: none;
+      }
+  }
 
 </style>

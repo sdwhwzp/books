@@ -331,6 +331,50 @@ app.post('/books',function (req, res) {
     }
 
 })
+app.get('/bookslist',function (req, res) {
+    let pageIndex=(req.query.pageIndex)
+    const token=req.query.token
+    const decode=jwt.decode(token)
+    let whereObj={}
+    db.count('bookList',whereObj,function (count) {
+        let pageNum=5;
+        let pageSum=Math.ceil(count/pageNum)
+        if (pageSum < 1) pageSum=1
+        if (pageIndex < 1) pageIndex=1
+        if (pageIndex > pageSum) pageIndex=pageSum
+        db.find('bookList',{
+            limit:pageNum,
+            skip:(pageIndex-1)*pageNum,
+            whereObj:{
+                userName:decode.info.adminName,
+                code:decode.info.code
+            },
+            sortObj:{
+                addTime: -1
+
+            }
+        },function (err, bookInfo) {
+            if (bookInfo){
+                res.json({
+                    ok:1,
+                    pageIndex,
+                    pageSum,
+                    bookInfo
+                })
+            } else {
+                res.json({
+                    ok:-1,
+                    msg:"暂无图书请上传"
+                })
+            }
+
+        })
+    })
+
+
+
+})
+
 app.listen(80,function () {
     console.log("success")
 })
