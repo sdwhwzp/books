@@ -1,59 +1,93 @@
 <template>
-  <div id="app">
-    <el-container>
-      <el-header style="height: 20%;background: #F56C6C" >
-        <h1 >图书管理下载中心</h1>
-        <el-button @click="$store.commit('LOGOUT')" type="primary">退出</el-button></el-header>
-      <el-main>Main
+    <div id="app">
+        <el-container>
+            <el-header style="height: 20%;background: #F56C6C">
+                <h1>图书管理下载中心</h1>
+                <el-button @click="$store.commit('LOGOUT')" type="primary">退出</el-button>
+            </el-header>
+            <el-main>
+                <el-button ref="book" type="text" @click="dialogFormVisible = true">上传图书</el-button>
+                <el-dialog title="只允许上传一本图书" :visible.sync="dialogFormVisible">
+                    <el-form :model="form">
+                        <el-form-item label="图书类型">
+                            <el-select v-model="form.region" placeholder="请选择图书类型">
 
-        <el-upload
-                class="upload-demo"
-                ref="upload"
-                action="https://127.0.1/book/books/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :file-list="fileList"
-                :auto-upload="false">
-          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+                                <el-option label="武侠" value="wuxia"></el-option>
+                                <el-option label="玄幻" value="xuanhuan"></el-option>
+                                <el-option label="言情" value="yanqing"></el-option>
+                                <el-option label="历史" value="lishi"></el-option>
+                                <el-option label="魔法" value="mofa"></el-option>
+                                <el-option label="军事" value="junshi"></el-option>
+                                <el-option label="古典" value="gudian"></el-option>
+                                <el-option label="其他" value="qita"></el-option>
+                            </el-select>
+                            <upload :fileList.sync="fileList" :value.sync="value"></upload>
 
-        </el-upload>
-      </el-main>
-      <el-main>Main<router-view v-if="show"></router-view></el-main>
-      <el-footer>Footer</el-footer>
-    </el-container>
+                        </el-form-item>
+                    </el-form>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button @click="resetFields">取 消</el-button>
+                        <el-button type="primary" @click="upload">确 定</el-button>
+                    </div>
+                </el-dialog>
+            </el-main>
+            <el-main>Main
+                <router-view v-if="show"></router-view>
+            </el-main>
+            <el-footer>Footer</el-footer>
+        </el-container>
 
 
-  </div>
+    </div>
 </template>
 <script>
   export default {
     name: "app",
-    data(){
-      return{
-        show:true
+    data() {
+      return {
+        show: true,
+          token:localStorage.token,
+          dialogFormVisible:false,
+          form:{
+              region:"",
+          },
+          value:"",
+          fileList:[]
       }
     },
+    methods:{
+        upload(){
+            this.$store.dispatch('upLoad',this)
+            this.resetFields()
+
+        },
+        resetFields(){
+            this.fileList=[]
+            this.form.region=""
+            this.dialogFormVisible=false
+        }
+    },
     mounted() {
-      const str=window.location.href
-      const me=this
-      if (str.indexOf("login") || str.indexOf("logon")>0) {
-        this.show=false
+      const str = window.location.href
+      const me = this
+      if (str.indexOf("login") || str.indexOf("logon") > 0) {
+        this.show = false
       }
       setInterval(function () {
-        me.$store.dispatch("again",me)
+        me.$store.dispatch("again", me)
 
-      },60000)
+      }, 60000)
     },
     beforeCreate() {
       if (localStorage.token) {
-        this.$store.dispatch("again",this)
+        this.$store.dispatch("again", this)
 
-      }else {
+      } else {
         this.$store.commit("LOGOUT")
       }
     }
   }
+
 </script>
 <style lang="less">
   *{

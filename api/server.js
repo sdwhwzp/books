@@ -2,10 +2,30 @@ const  express=require("express")
 const db=require("./module/db")
 const help =require("./module/hp")
 const phoneCode=require("./module/phoneCode")
-
 const jwt =require("./module/jwt")
 const bodyParser=require("body-parser")
 const app = express()
+const multer  = require('multer')
+const fs = require('fs');
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'upload/')
+    },
+    filename: function (req, file, cb) {
+
+        const index = file.originalname.lastIndexOf(".");
+        const keepName = file.originalname.substr(index).toLowerCase();
+        const arr=[".epub",".txt",".mobi",'.awz3']
+        if (arr.includes(keepName)) {
+
+            cb(null, file.originalname)
+        }else {
+            cb(null, "warning")
+        }
+    }
+})
+var upload = multer({ storage: storage })
+const update=upload.single('book')
 app.use(bodyParser.json())
 app.post("/token",function (req, res) {
     const token=req.body.token
@@ -50,7 +70,7 @@ app.post("/login",function (req, res) {
     },function (err, adminInfo) {
         if (adminInfo) {
             const code=help.md5(adminInfo.level)
-            const token=jwt.encode({adminName,code})
+            const token=jwt.encode(adminName,code)
 
             db.updateOne("admin",{
                 userName:adminName,
@@ -74,7 +94,7 @@ app.post("/login",function (req, res) {
             },function (err, userInfo) {
                if (userInfo) {
                    const code=help.md5(userInfo.level)
-                   const token =jwt.encode({adminName,code})
+                   const token =jwt.encode(adminName,code)
 
                    db.updateOne("userList",{
                        userName:adminName
@@ -265,6 +285,51 @@ app.get('/userName',function (req, res) {
             })
         }
     })
+})
+app.post('/upload', upload.single('book'), function (req, res, next) {
+
+    if (req.file.filename === "warning") {
+
+        fs.unlink("./upload/warning",function (err) {
+            res.json({
+                ok:2,
+                msg:"请上传符合要求的图书，目前支持'.epub','.txt','.mobi','.awz3'"
+            })
+        })
+    }
+    else res.json({
+            ok:1,
+            msg:"上传成功",
+            filename:req.file.filename
+        })
+
+})
+app.post('/books',function (req, res) {
+
+    const {token,bookName,booksType}=req.body
+    console.log(jwt.decode(token))
+    const decode = jwt.decode(token)
+    if (decode.info) {
+        db.insertOne("bookList",{
+            userName:decode.info.adminName,
+            code:decode.info.code,
+            bookName,
+            booksType,
+            addTime:Date.now(),
+            path:"upload/"+bookName
+        },function (err) {
+            res.json({
+                ok:1,
+                msg:"上传成功"
+            })
+        })
+    }else {
+       res.json({
+           ok:-1,
+           msg:"上传失败"
+       })
+    }
+
 })
 app.listen(80,function () {
     console.log("success")

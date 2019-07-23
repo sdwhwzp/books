@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import login from "./login"
 import logon from './logon'
+import pc from './Pc upload'
 import axios from 'axios'
 Vue.use(Vuex)
 
@@ -14,10 +15,7 @@ export default new Vuex.Store({
   },
   actions: {
     again({login},vm){
-
-
       axios.post("/token",{token:localStorage.token}).then(data=>{
-
         if (data.ok === -1){
           vm.$store.commit("LOGOUT")
           vm.$message({
@@ -31,6 +29,7 @@ export default new Vuex.Store({
   },
   modules:{
     login,
-    logon
+    logon,
+    pc
   }
 })

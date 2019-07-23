@@ -1,10 +1,11 @@
 const  jwt =require("jwt-simple")
 const key="@#$@#%$@#$@#$@#"
 module.exports={
-    encode(adminName,exp=60*10*1000) {
+    encode(adminName,code,exp=60*60*1000) {
 
         return jwt.encode({
             adminName,
+            code,
             exp:Date.now()+exp
         },key)
 
