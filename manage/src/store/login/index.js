@@ -1,14 +1,14 @@
 import axios from "axios"
 const state={
-  token:localStorage.token
+  token:sessionStorage.token
 }
 const mutations={
     CHANGE_TOKEN(state,token){
-        state.token=localStorage.token=token
+        state.token=sessionStorage.token=token
     },
     LOGOUT(state){
-        localStorage.removeItem("token")
-        state.token=localStorage.token
+        sessionStorage.removeItem("token")
+        state.token=sessionStorage.token
 
     }
 }

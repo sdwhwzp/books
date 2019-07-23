@@ -1,4 +1,5 @@
 const  express=require("express")
+const path =require("path")
 const db=require("./module/db")
 const help =require("./module/hp")
 const phoneCode=require("./module/phoneCode")
@@ -18,7 +19,7 @@ var storage = multer.diskStorage({
         const arr=[".epub",".txt",".mobi",'.awz3']
         if (arr.includes(keepName)) {
 
-            cb(null, file.originalname)
+            cb(null, file.fieldname + '-' + Date.now())
         }else {
             cb(null, "warning")
         }
@@ -27,6 +28,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 const update=upload.single('book')
 app.use(bodyParser.json())
+app.use('/download',express.static(path.join(__dirname,'upload')))
 app.post("/token",function (req, res) {
     const token=req.body.token
     db.findOne("admin",{
@@ -300,13 +302,14 @@ app.post('/upload', upload.single('book'), function (req, res, next) {
     else res.json({
             ok:1,
             msg:"上传成功",
-            filename:req.file.filename
+            filename:req.file.originalname,
+            book:req.file.filename
         })
 
 })
 app.post('/books',function (req, res) {
 
-    const {token,bookName,booksType}=req.body
+    const {token,bookName,booksType,book}=req.body
     console.log(jwt.decode(token))
     const decode = jwt.decode(token)
     if (decode.info) {
@@ -316,7 +319,7 @@ app.post('/books',function (req, res) {
             bookName,
             booksType,
             addTime:Date.now(),
-            path:"upload/"+bookName
+            path:"upload/"+book
         },function (err) {
             res.json({
                 ok:1,
@@ -337,7 +340,7 @@ app.get('/bookslist',function (req, res) {
     const decode=jwt.decode(token)
     let whereObj={}
     db.count('bookList',whereObj,function (count) {
-        let pageNum=5;
+        let pageNum=8;
         let pageSum=Math.ceil(count/pageNum)
         if (pageSum < 1) pageSum=1
         if (pageIndex < 1) pageIndex=1
@@ -373,6 +376,38 @@ app.get('/bookslist',function (req, res) {
 
 
 
+})
+app.delete('/delete',function (req, res) {
+
+    const row=JSON.parse(req.query.row)
+
+    const {_id,userName,code,bookName,path} =row
+
+   db.deleteOneById("bookList",_id,function (err) {
+       try{
+           fs.unlink("./"+path,function (err) {
+               res.json({
+                   ok:1,
+                   msg:"删除成功"
+               })
+           })
+       }catch (e) {
+           res.json({
+               ok:-1,
+               msg:"删除失败"
+           })
+       }
+
+   })
+
+})
+app.get('/down',function (req, res) {
+
+    const row=JSON.parse(req.query.row)
+    const {_id,userName,code,bookName,path} =row
+    let file=path
+    console.log(file)
+    res.json(file)
 })
 
 app.listen(80,function () {

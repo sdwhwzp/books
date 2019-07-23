@@ -16,7 +16,7 @@
 <script>
     export default {
         name: "upload",
-        props:["value","fileList"],
+        props:["value","fileList","num"],
         data(){
             return {
 
@@ -28,6 +28,7 @@
 
             },
             handleSuccess(response) {
+                console.log(response)
                 if (response.ok === 1) {
                     this.$message({
                         showClose: true,
@@ -35,6 +36,7 @@
                         type: 'success'
                     });
                     this.$emit("update:value",response.filename)
+                    this.$emit("update:num",response.book)
                 } else {
                     this.$message({
                         showClose: true,

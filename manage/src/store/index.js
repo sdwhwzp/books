@@ -15,7 +15,7 @@ export default new Vuex.Store({
   },
   actions: {
     again({login},vm){
-      axios.post("/token",{token:localStorage.token}).then(data=>{
+      axios.post("/token",{token:sessionStorage.token}).then(data=>{
         if (data.ok === -1){
           vm.$store.commit("LOGOUT")
           vm.$message({

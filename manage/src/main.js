@@ -7,15 +7,17 @@ import 'element-ui/lib/theme-chalk/index.css';
 import store from './store'
 import axios from "axios"
 import components from './components'
+import filters from './filters'
 Vue.config.productionTip = false
 Vue.use(ElementUI);
 Vue.use(components)
+Vue.use(filters)
 Vue.prototype.$axios=axios
 
 router.beforeEach((to,from,next)=>{
   if (to.meta.isAuthorization){
 
-    if (localStorage.token) {
+    if (sessionStorage.token) {
       store.dispatch("again")
 
     }else{

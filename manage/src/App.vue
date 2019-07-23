@@ -11,17 +11,16 @@
                     <el-form :model="form">
                         <el-form-item label="图书类型">
                             <el-select v-model="form.region" placeholder="请选择图书类型">
-
-                                <el-option label="武侠" value="wuxia"></el-option>
-                                <el-option label="玄幻" value="xuanhuan"></el-option>
-                                <el-option label="言情" value="yanqing"></el-option>
-                                <el-option label="历史" value="lishi"></el-option>
-                                <el-option label="魔法" value="mofa"></el-option>
-                                <el-option label="军事" value="junshi"></el-option>
-                                <el-option label="古典" value="gudian"></el-option>
-                                <el-option label="其他" value="qita"></el-option>
+                                <el-option label="武侠" value="武侠"></el-option>
+                                <el-option label="玄幻" value="玄幻"></el-option>
+                                <el-option label="言情" value="言情"></el-option>
+                                <el-option label="历史" value="历史"></el-option>
+                                <el-option label="魔法" value="魔法"></el-option>
+                                <el-option label="军事" value="军事"></el-option>
+                                <el-option label="古典" value="古典"></el-option>
+                                <el-option label="其他" value="其他"></el-option>
                             </el-select>
-                            <upload :fileList.sync="fileList" :value.sync="value"></upload>
+                            <upload :fileList.sync="fileList" :num.sync="num" :value.sync="value"></upload>
 
                         </el-form-item>
                     </el-form>
@@ -33,13 +32,14 @@
             </el-main>
             <el-main>
                 <h3>图书列表</h3>
-                <router-link to="/userlist">请点击我</router-link>
+
+
+                <router-link to="/userlist" >请点击我</router-link>
                 <router-view v-if="show"></router-view>
+
             </el-main>
             <el-footer>Footer</el-footer>
         </el-container>
-
-
     </div>
 </template>
 <script>
@@ -48,20 +48,22 @@
     data() {
       return {
         show:true,
-          token:localStorage.token,
+          token:sessionStorage.token,
           dialogFormVisible:false,
           form:{
               region:"",
           },
           value:"",
-          fileList:[]
+          fileList:[],
+          num:''
+
       }
     },
     methods:{
-        upload(){
+         upload(){
             this.$store.dispatch('upLoad',this)
             this.resetFields()
-
+            this.$store.dispatch("getbookList")
         },
         resetFields(){
             this.fileList=[]
@@ -73,7 +75,7 @@
       const str = window.location.href
         console.log(str)
       const me = this
-
+        this.$store.dispatch("getbookList")
       if (str.indexOf("login")>0 || str.indexOf("logon") > 0) {
 
         this.show = false
@@ -86,7 +88,7 @@
       }, 60000)
     },
     beforeCreate() {
-      if (localStorage.token) {
+      if (sessionStorage.token) {
         this.$store.dispatch("again", this)
 
       } else {
