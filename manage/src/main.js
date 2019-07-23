@@ -12,6 +12,20 @@ Vue.use(ElementUI);
 Vue.use(components)
 Vue.prototype.$axios=axios
 
+router.beforeEach((to,from,next)=>{
+  if (to.meta.isAuthorization){
+
+    if (localStorage.token) {
+      store.dispatch("again")
+
+    }else{
+      store.commit("OUT_LOGIN")
+    }
+  } else{
+    next()
+  }
+  console.log(to,from)
+})
 
 axios.interceptors.request.use(config=>{
 

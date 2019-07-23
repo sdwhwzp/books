@@ -7,6 +7,38 @@ const jwt =require("./module/jwt")
 const bodyParser=require("body-parser")
 const app = express()
 app.use(bodyParser.json())
+app.post("/token",function (req, res) {
+    const token=req.body.token
+    db.findOne("admin",{
+        token
+    },function (err, adminInfo) {
+        if (adminInfo) {
+            if (adminInfo.token===token){
+                res.json(jwt.decode(token))
+            }else {
+                res.json({
+                    ok:-1,
+                    msg:"账号在别处登录"
+                })
+            }
+        }else {
+            db.findOne("userList",{
+                token
+            },function (err,userInfo) {
+                if (userInfo.token === token){
+                    res.json(jwt.decode(token))
+                }else {
+                    res.json({
+                        ok:-1,
+                        msg:"账号在别处登录"
+                    })
+                }
+            })
+        }
+
+    })
+
+})
 app.post("/login",function (req, res) {
 
     const {adminName,passWord}=req.body
@@ -17,12 +49,23 @@ app.post("/login",function (req, res) {
             password:help.md5(passWord)
     },function (err, adminInfo) {
         if (adminInfo) {
+            const code=help.md5(adminInfo.level)
+            const token=jwt.encode({adminName,code})
 
-            res.json({
-                token:jwt.encode(adminName,adminInfo),
-                code:help.md5(adminInfo.level),
-                ok:1,
-                msg:"登录成功"
+            db.updateOne("admin",{
+                userName:adminName,
+
+            },{
+                $set:{
+                    token
+                }
+            },function (err, updateInfo) {
+                res.json({
+                    token,
+                    code,
+                    ok:1,
+                    msg:"登录成功"
+                })
             })
         }else {
             db.findOne("userList",{
@@ -30,13 +73,24 @@ app.post("/login",function (req, res) {
                 password:help.md5(passWord)
             },function (err, userInfo) {
                if (userInfo) {
-                   console.log(userInfo)
-                   console.log(userInfo.level)
-                   res.json({
-                       token:jwt.encode(adminName,userInfo.level),
-                       code:help.md5(userInfo.level),
-                       ok:1,
-                       msg:"登录成功"
+                   const code=help.md5(userInfo.level)
+                   const token =jwt.encode({adminName,code})
+
+                   db.updateOne("userList",{
+                       userName:adminName
+                   },{
+                       $set:{
+                           token
+                       }
+
+                   },function (err) {
+
+                       res.json({
+                           token,
+                            code,
+                           ok:1,
+                           msg:"登录成功"
+                       })
                    })
                }else {
                    help.json(res,-2,"密码错误")
@@ -154,6 +208,7 @@ app.post("/logon",function (req,res) {//post方式接收
                                         userName: adminName,
                                         password:help.md5(passWord),
                                         phoneId,
+                                        token:"",
                                         lastTime:Date.now(),
                                         level:help.md5("lv1")
                                     },function (err, results) {
