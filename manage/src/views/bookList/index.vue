@@ -34,9 +34,9 @@
                     <el-button
                             size="mini"
                             type="danger"
-
-                            @click="handleDelete(scope.$index, scope.row)">下载</el-button>
+                            @click="open(scope.$index, scope.row)">下载</el-button>
                 </template>
+
             </el-table-column>
 
         </el-table>
@@ -69,10 +69,38 @@
                this.$store.dispatch("getbookList")
            },
            handleDelete(index, row) {
-               this.$store.dispatch("download",row)
 
+               this.open(index,row)
+
+               // this.$store.dispatch("download",row)
+
+
+
+           },
+           open(index,row) {
+
+                   this.$prompt('请输入邮箱', '提示', {
+                       confirmButtonText: '确定',
+                       cancelButtonText: '取消',
+                       inputPattern: /[\w!#$%&'*+/=?^_`{|}~-]+(?:\.[\w!#$%&'*+/=?^_`{|}~-]+)*@(?:[\w](?:[\w-]*[\w])?\.)+[\w](?:[\w-]*[\w])?/,
+                       inputErrorMessage: '邮箱格式不正确'
+                   }).then(({ value }) => {
+
+                       this.$message({
+                           type: 'success',
+                           message: "正在发送"
+                       });
+                       this.$store.dispatch("download",{row,value})
+
+                   }).catch(() => {
+                       this.$message({
+                           type: 'info',
+                           message: '取消输入'
+                       });
+                   });
+               }
            }
-       }
+
     }
 </script>
 

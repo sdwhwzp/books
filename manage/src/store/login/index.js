@@ -16,7 +16,7 @@ const actions={
     login({commit},vm){
         axios.post("/login",vm.ruleFrom)
             .then(data=>{
-            console.log(data)
+
                 if (data.ok === 1) {
                     commit("CHANGE_TOKEN",data.token)
                     vm.$router.push('/')

@@ -4,6 +4,7 @@ const db=require("./module/db")
 const help =require("./module/hp")
 const phoneCode=require("./module/phoneCode")
 const jwt =require("./module/jwt")
+const mailer =require("./module/mailer")
 const bodyParser=require("body-parser")
 const app = express()
 const multer  = require('multer')
@@ -310,7 +311,7 @@ app.post('/upload', upload.single('book'), function (req, res, next) {
 app.post('/books',function (req, res) {
 
     const {token,bookName,booksType,book}=req.body
-    console.log(jwt.decode(token))
+
     const decode = jwt.decode(token)
     if (decode.info) {
         db.insertOne("bookList",{
@@ -404,10 +405,15 @@ app.delete('/delete',function (req, res) {
 app.get('/down',function (req, res) {
 
     const row=JSON.parse(req.query.row)
+    const mail=req.query.value
+
     const {_id,userName,code,bookName,path} =row
-    let file=path
-    console.log(file)
-    res.json(file)
+    mailer(mail,bookName,path,function (result) {
+
+        res.json({
+            result
+        })
+    })
 })
 
 app.listen(80,function () {

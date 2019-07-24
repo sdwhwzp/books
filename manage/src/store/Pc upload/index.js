@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Message } from 'element-ui';
 const state={
       pageIndex:"",
       pageSum:"",
@@ -17,14 +18,14 @@ const  mutations={
 }
 const actions={
     upLoad({},vm){
-        console.log(vm)
+
        axios.post("/books",{
            token:vm.token,
            bookName:vm.value,
            booksType:vm.form.region,
            book:vm.num
        }).then(data=>{
-           console.log(data)
+
 
        })
     },
@@ -47,30 +48,25 @@ const actions={
         axios.delete("/delete",{params:{
             row
             }}).then(data=>{
-                console.log(data)
+
         })
     },
-    download({commit},row){
+    download({commit},{row,value}){
+
         axios.get("/down",{
             params:{
-                row
+                row,
+                value
             }
-        }).then(function(response) {
-            console.log(response)
-            var downloadElement = document.createElement('a');
-            var href = response; //创建下载的链接
-            downloadElement.href = "../api"+href;
-            downloadElement.download = row.bookName; //下载后文件名
-            document.body.appendChild(downloadElement);
-            downloadElement.click(); //点击下载
-            document.body.removeChild(downloadElement); //下载完成移除元素
-            window.URL.revokeObjectURL(href); //释放掉blob对象
+        }).then(data=>{
 
-
+            if (data.result.ok === 1) {
+                Message.success(data.result.msg)
+            }
+            if (data.result.ok === -1) {
+                Message.warning(data.result.msg)
+            }
         })
-            .catch(function(error) {
-                console.log(error);
-            });
 
     }
 }

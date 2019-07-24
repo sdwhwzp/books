@@ -28,7 +28,7 @@
 
             },
             handleSuccess(response) {
-                console.log(response)
+
                 if (response.ok === 1) {
                     this.$message({
                         showClose: true,

@@ -73,7 +73,7 @@
     },
     mounted() {
       const str = window.location.href
-        console.log(str)
+
       const me = this
         this.$store.dispatch("getbookList")
       if (str.indexOf("login")>0 || str.indexOf("logon") > 0) {

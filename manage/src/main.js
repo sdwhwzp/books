@@ -26,7 +26,7 @@ router.beforeEach((to,from,next)=>{
   } else{
     next()
   }
-  console.log(to,from)
+
 })
 
 axios.interceptors.request.use(config=>{
