@@ -85,7 +85,7 @@
       setInterval(function () {
         me.$store.dispatch("again", me)
 
-      }, 60000)
+      }, 10000)
     },
     beforeCreate() {
       if (sessionStorage.token) {

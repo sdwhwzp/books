@@ -5,19 +5,21 @@ import logon from './logon'
 import pc from './Pc upload'
 import axios from 'axios'
 Vue.use(Vuex)
+const state={
 
+}
+const  mutations={
+
+}
 export default new Vuex.Store({
-  state: {
-
-  },
-  mutations: {
-
-  },
+  state,
+  mutations,
   actions: {
-    again({login},vm){
+    again({commit},vm){
       axios.post("/token",{token:sessionStorage.token}).then(data=>{
         if (data.ok === -1){
-          vm.$store.commit("LOGOUT")
+          
+          commit("LOGOUT")
           vm.$message({
             message: data.msg,
             type: 'warning'

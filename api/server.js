@@ -38,19 +38,15 @@ app.post("/token",function (req, res) {
         if (adminInfo) {
             if (adminInfo.token===token){
                 res.json(jwt.decode(token))
-            }else {
-                res.json({
-                    ok:-1,
-                    msg:"账号在别处登录"
-                })
             }
+
         }else {
             db.findOne("userList",{
-                token
-            },function (err,userInfo) {
-                if (userInfo.token === token){
+                        token
+                    },function (err,userInfo) {
+                if (userInfo){
                     res.json(jwt.decode(token))
-                }else {
+                } else{
                     res.json({
                         ok:-1,
                         msg:"账号在别处登录"
@@ -410,9 +406,11 @@ app.get('/down',function (req, res) {
     const {_id,userName,code,bookName,path} =row
     mailer(mail,bookName,path,function (result) {
 
-        res.json({
-            result
-        })
+            res.json({
+                result
+            })
+
+
     })
 })
 

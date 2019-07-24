@@ -33,16 +33,23 @@ module.exports=function(email,bookName,path,cb){
 
 // send mail with defined transport object
     transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
+        try{if (error) {
             cb({
                 ok:-1,
                 msg:"发送失败，请检查文件是否超过邮箱最大发送容量"
             })
+        }else{
+            cb({
+                ok:1,
+                msg:"已发送，请接收"
+            })
         }
-        cb({
-            ok:1,
-            msg:"已发送，请接收"
-        })
+        }catch (e) {
+            cb({
+                ok:-1,
+                msg:"发送失败"
+            })
+        }
 // Message sent: <04ec7731-cc68-1ef6-303c-61b0f796b78f@qq.com>
     });
 }
